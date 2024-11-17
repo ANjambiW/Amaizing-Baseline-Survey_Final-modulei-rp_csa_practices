@@ -1,0 +1,785 @@
+---
+title: "Amaizing  Baseline Survey_Final-modulei-rp_csa_practices"
+author: "Njambi"
+format: html
+editor: visual
+---
+
+## 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Clear the environment
+
+```{r}
+
+rm(list = ls())
+
+```
+
+## Loading necessary libraries
+
+```{r, include=FALSE}
+
+library(tidyverse) # includes the dplyr, ggplot2, tidyr, readr, stringr, forcats, tibble packages
+library(readxl)
+library(Hmisc)
+library(labelled)
+library(magrittr)
+library(datawizard)
+library(gtsummary)
+library(gt)
+library(kableExtra)
+library(flextable)
+library(splitstackshape)
+library(lubridate)
+library(foreign)
+library(haven)
+
+
+```
+
+## Set the working directory
+
+```{r}
+# Set working directory
+
+setwd("C:\\Users\\awanjau\\OneDrive - CGIAR\\Alliance\\Alliance_2024\\AMAZING\\AmazingBaselineDataCleaning\\Amaizing  Baseline Survey_Final-modulei-rp_csa_practices")
+      
+```
+
+## Loading data
+
+```{r}
+# Read a csv file
+
+aMaizingBL_csa_practices_path <- "C:\\Users\\awanjau\\OneDrive - CGIAR\\Alliance\\Alliance_2024\\AMAZING\\aMaizingBaseline_Files\\Amaizing  Baseline Survey_Final-modulei-rp_csa_practices.csv"
+
+aMaizingBL_csa_practices <- read_csv(aMaizingBL_csa_practices_path)
+
+head(aMaizingBL_csa_practices)
+```
+
+```{r}
+# Check number of rows and columns in data
+
+dim(aMaizingBL_csa_practices)
+
+# Print column names
+
+names(aMaizingBL_csa_practices)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i12_index)
+
+unique(aMaizingBL_csa_practices$i12_index)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i12_index = as.integer(i12_index)
+  )
+
+class(aMaizingBL_csa_practices$i12_index)
+```
+
+```{r}
+sort(unique(aMaizingBL_csa_practices$i12_index1), na.last = TRUE)
+
+```
+
+```{r}
+
+adopted_CSAP_levels <- c(
+  
+  "Rainwater Harvesting- Farm Ponds",	"Drip Irrigation",	"Sprinkler Irrigation",	"Furrow Irrigated Bed Planting",	"Conservation Furrow",	"Raised Bed Planting",	"Drainage Management",	"Cover Crops Method",	"Zero/minimum tillage",	"Crop Rotation",	"Mulching",	"Solar Pumps",	"Site Specific Integrated Nutrient Management / Soil Sample",	"Concentrate Feeding for Livestock",	"Green Manuring",	"Intercropping with Legumes",	"Agro Forestry/Horticulture",	"Fodder Management",	"Bio-gas",	"Climate Smart Housing for Livestock",	"Climate Information (seasonal and in season)",	"Weather Based Crop Agro-Advisory",	"Crop Insurance",	"Contingent Crop Planning",	"Integrated Pest Management",	"Improved/Short Duration Crop Varieties",	"Fodder Banks",	"Seed Systems/Banks",	"Stress Tolerant High-Yielding Breeds of Livestock",	"Livestock & Fishery as Diversification Strategy",	"Other Specify",	"Other Specify"
+                         )  
+
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i12_index1 = factor(
+      i12_index1, 
+      levels = c(1:30, -222, -2222 ), 
+      labels = adopted_CSAP_levels
+    )
+  
+  ) 
+
+unique(aMaizingBL_csa_practices$i12_index1)
+```
+
+```{r}
+
+class(aMaizingBL_csa_practices$i12_id) # Is character; convert to factor
+
+unique(aMaizingBL_csa_practices$i12_id)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i12_id = factor(i12_id)
+  
+  ) 
+
+class(aMaizingBL_csa_practices$i12_id)
+
+unique(aMaizingBL_csa_practices$i12_id)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i13) # Is numeric; convert to integer
+
+sort(unique(aMaizingBL_csa_practices$i13), na.last = TRUE)
+
+```
+
+```{r}
+
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i13 = case_when(
+      i13 == -999 ~ NA_real_,  # Replace -999 with NA for numeric variables
+      i13 == -888  ~ NA_real_,
+      i13 == 888 ~ NA_real_,
+      TRUE ~ i13               
+    ),
+    
+    i13 = as.integer(i13)    # Convert numeric to integer
+    
+  )
+
+class(aMaizingBL_csa_practices$i13)
+
+sort(unique(aMaizingBL_csa_practices$i13), na.last = TRUE)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14)
+
+# unique(aMaizingBL_csa_practices$i14)
+
+# Multi-response question
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_1)
+
+unique(aMaizingBL_csa_practices$i14_1)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_1 = as.integer(i14_1)
+  )
+
+class(aMaizingBL_csa_practices$i14_1)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_2)
+
+unique(aMaizingBL_csa_practices$i14_2)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_2 = as.integer(i14_2)
+  )
+
+class(aMaizingBL_csa_practices$i14_2)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_3)
+
+unique(aMaizingBL_csa_practices$i14_3)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_3 = as.integer(i14_3)
+  )
+
+class(aMaizingBL_csa_practices$i14_3)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_4)
+
+unique(aMaizingBL_csa_practices$i14_4)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_4 = as.integer(i14_4)
+  )
+
+class(aMaizingBL_csa_practices$i14_4)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_5)
+
+unique(aMaizingBL_csa_practices$i14_5)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_5 = as.integer(i14_5)
+  )
+
+class(aMaizingBL_csa_practices$i14_5)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_6)
+
+unique(aMaizingBL_csa_practices$i14_6)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_6 = as.integer(i14_6)
+  )
+
+class(aMaizingBL_csa_practices$i14_6)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_7)
+
+unique(aMaizingBL_csa_practices$i14_7)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_7 = as.integer(i14_7)
+  )
+
+class(aMaizingBL_csa_practices$i14_7)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_8)
+
+unique(aMaizingBL_csa_practices$i14_8)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_8 = as.integer(i14_8)
+  )
+
+class(aMaizingBL_csa_practices$i14_8)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_9)
+
+unique(aMaizingBL_csa_practices$i14_9)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_9 = as.integer(i14_9)
+  )
+
+class(aMaizingBL_csa_practices$i14_9)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_10)
+
+unique(aMaizingBL_csa_practices$i14_10)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_10 = as.integer(i14_10)
+  )
+
+class(aMaizingBL_csa_practices$i14_10)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_11)
+
+unique(aMaizingBL_csa_practices$i14_11)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_11 = as.integer(i14_11)
+  )
+
+class(aMaizingBL_csa_practices$i14_11)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_12)
+
+unique(aMaizingBL_csa_practices$i14_12)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_12 = as.integer(i14_12)
+  )
+
+class(aMaizingBL_csa_practices$i14_12)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_13)
+
+unique(aMaizingBL_csa_practices$i14_13)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_13 = as.integer(i14_13)
+  )
+
+class(aMaizingBL_csa_practices$i14_13)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_14)
+
+unique(aMaizingBL_csa_practices$i14_14)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_14 = as.integer(i14_14)
+  )
+
+class(aMaizingBL_csa_practices$i14_14)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_15)
+
+unique(aMaizingBL_csa_practices$i14_15)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_15 = as.integer(i14_15)
+  )
+
+class(aMaizingBL_csa_practices$i14_15)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_16)
+
+unique(aMaizingBL_csa_practices$i14_16)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_16 = as.integer(i14_16)
+  )
+
+class(aMaizingBL_csa_practices$i14_16)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_17)
+
+unique(aMaizingBL_csa_practices$i14_17)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_17 = as.integer(i14_17)
+  )
+
+class(aMaizingBL_csa_practices$i14_17)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_18)
+
+unique(aMaizingBL_csa_practices$i14_18)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_18 = as.integer(i14_18)
+  )
+
+class(aMaizingBL_csa_practices$i14_18)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_19)
+
+unique(aMaizingBL_csa_practices$i14_19)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_19 = as.integer(i14_19)
+  )
+
+class(aMaizingBL_csa_practices$i14_19)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_20)
+
+unique(aMaizingBL_csa_practices$i14_20)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_20 = as.integer(i14_20)
+  )
+
+class(aMaizingBL_csa_practices$i14_20)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_21)
+
+unique(aMaizingBL_csa_practices$i14_21)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_21 = as.integer(i14_21)
+  )
+
+class(aMaizingBL_csa_practices$i14_21)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_22)
+
+unique(aMaizingBL_csa_practices$i14_22)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_22 = as.integer(i14_22)
+  )
+
+class(aMaizingBL_csa_practices$i14_22)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_23)
+
+unique(aMaizingBL_csa_practices$i14_23)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_23 = as.integer(i14_23)
+  )
+
+class(aMaizingBL_csa_practices$i14_23)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_24)
+
+unique(aMaizingBL_csa_practices$i14_24)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_24 = as.integer(i14_24)
+  )
+
+class(aMaizingBL_csa_practices$i14_24)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_25)
+
+unique(aMaizingBL_csa_practices$i14_25)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_25 = as.integer(i14_25)
+  )
+
+class(aMaizingBL_csa_practices$i14_25)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_26)
+
+unique(aMaizingBL_csa_practices$i14_26)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_26 = as.integer(i14_26)
+  )
+
+class(aMaizingBL_csa_practices$i14_26)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_27)
+
+unique(aMaizingBL_csa_practices$i14_27)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_27 = as.integer(i14_27)
+  )
+
+class(aMaizingBL_csa_practices$i14_27)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_28)
+
+unique(aMaizingBL_csa_practices$i14_28)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_28 = as.integer(i14_28)
+  )
+
+class(aMaizingBL_csa_practices$i14_28)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_29)
+
+unique(aMaizingBL_csa_practices$i14_29)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_29 = as.integer(i14_29)
+  )
+
+class(aMaizingBL_csa_practices$i14_29)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_30)
+
+unique(aMaizingBL_csa_practices$i14_30)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14_30 = as.integer(i14_30)
+  )
+
+class(aMaizingBL_csa_practices$i14_30)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14__222)
+
+unique(aMaizingBL_csa_practices$i14__222)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14__222 = as.integer(i14__222)
+  )
+
+class(aMaizingBL_csa_practices$i14__222)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14__2222)
+
+unique(aMaizingBL_csa_practices$i14__2222)
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  mutate(
+    i14__2222 = as.integer(i14__2222)
+  )
+
+class(aMaizingBL_csa_practices$i14__2222)
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i14_sp)
+
+unique(aMaizingBL_csa_practices$i14_sp) # Text data; not cleaned
+```
+
+```{r}
+class(aMaizingBL_csa_practices$i15)
+
+unique(aMaizingBL_csa_practices$i15) # Text data; not cleaned
+```
+
+```{r}
+
+column_labels <- c(
+
+i12_index = "CSA Practices adopted repeat iteration/index",
+i12_index1 = "CSA Practices adopted level/category selected",
+i12_id = "CSA Practices adopted corresponding to i_index1",
+i13 = "Number of years have you used i12_id",
+i14 = "Name of Crops/Livestock  Affected/Used for i12_id",
+i14_1 = "Maize",
+i14_2 = "Rice",
+i14_3 = "Wheat",
+i14_4 = "Groundnut",
+i14_5 = "Pigeonpea",
+i14_6 = "Common bean",
+i14_7 = "Sunflower",
+i14_8 = "Sweet potatoes",
+i14_9 = "Irish potatoes",
+i14_10 = "Cassava",
+i14_11 = "Sesame",
+i14_12 = "Soyabean",
+i14_13 = "Bananas",
+i14_14 = "Indigenous milking cows",
+i14_15 = "Cross-bred milking cows",
+i14_16 = "Exotic milking cows",
+i14_17 = "Non-milking cows (mature)",
+i14_18 = "Trained oxen for ploughing",
+i14_19 = "Bulls",
+i14_20 = "Heifers",
+i14_21 = "Calves",
+i14_22 = "Goats",
+i14_23 = "Sheep",
+i14_24 = "Rabbit",
+i14_25 = "Donkeys",
+i14_26 = "Poultry",
+i14_27 = "Bee hives",
+i14_28 = "Pigs",
+i14_29 = "Horses/mules",
+i14_30 = "Camel",
+i14__222 = "Other Specify",
+i14__2222 = "Other Specify",
+i14_sp = "Please Specify",
+i15 = "Total atea under i12_id (Acres)",
+PARENT_KEY = "Parent key",
+KEY = "Key",
+`SET-OF-rp_csa_practices` = "Climate Information Services and Agro-advisory Services source repeat group ID"
+)
+
+```
+
+```{r}
+
+# Rename columns with characters not supported by stata
+
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  
+  rename(SET_OF_rp_csa_practices = `SET-OF-rp_csa_practices`
+    
+         )
+
+```
+
+```{r}
+aMaizingBL_csa_practices <- aMaizingBL_csa_practices %>%
+  set_variable_labels(.labels = column_labels)
+```
+
+Using the function View() to open the new data in a spreadsheet reveals the column names and labels.
+
+```{r}
+
+#View(aMaizingBL_csa_practices)
+
+```
+
+## Generate a data dictionary
+
+```{r}
+# Data dictionary
+
+aMaizingBL_csa_practices_dict <- look_for(aMaizingBL_csa_practices, labels = TRUE, values = TRUE) %>%
+  dplyr::select(-c(missing, value_labels))
+
+  gt(aMaizingBL_csa_practices_dict)
+
+```
+
+## Export data dictionary to CSV
+
+```{r}
+
+readr::write_csv(aMaizingBL_csa_practices_dict, "aMaizingBL_csa_practices_dict.csv")
+
+```
+
+## Export data to CSV
+
+```{r}
+
+readr::write_csv(aMaizingBL_csa_practices, "aMaizingBL_csa_practices.csv")
+
+```
+
+## Save as R data
+
+```{r}
+
+save(aMaizingBL_csa_practices, file = "aMaizingBL_csa_practices.RData")
+```
+
+## Export data to SPSS
+
+```{r}
+
+write.foreign(aMaizingBL_csa_practices, "aMaizingBL_csa_practices.sav", "aMaizingBL_csa_practices", package = "SPSS")
+
+```
+
+## Export data to STATA
+
+```{r}
+
+write_dta(aMaizingBL_csa_practices, "aMaizingBL_csa_practices.dta")
+
+```
